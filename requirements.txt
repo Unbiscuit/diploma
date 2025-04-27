@@ -3,3 +3,5 @@ grpcio-tools
 grpcio-reflection
 confluent-kafka
 minio
+fastapi
+uvicorn
