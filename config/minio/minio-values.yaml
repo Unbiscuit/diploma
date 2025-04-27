@@ -1,0 +1,14 @@
+mode: standalone
+
+persistence:
+  enabled: true
+  size: 20Gi
+
+auth:
+  rootUser: admin
+  rootPassword: admin12345
+
+defaultBuckets: spd-events
+
+service:
+  type: ClusterIP

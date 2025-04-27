@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package nica_proto;
+
+// Сообщение запроса
+message IngestRequest {
+  string detector = 1;
+  bytes payload = 2;
+}
+
+// Пустой ответ
+message Ack {}
+
+// gRPC сервис
+service IngestService {
+  rpc IngestEvent(IngestRequest) returns (Ack);
+}

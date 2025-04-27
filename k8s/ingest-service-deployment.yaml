@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ingest-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ingest-service
+  template:
+    metadata:
+      labels:
+        app: ingest-service
+    spec:
+      containers:
+      - name: ingest-service
+        image: uncookie/ingest-service:latest
+        ports:
+        - containerPort: 50051

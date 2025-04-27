@@ -1,0 +1,13 @@
+auth:
+  adminUser: admin
+  adminPassword: admin123
+
+service:
+  type: ClusterIP
+
+ingress:
+  enabled: true
+  hostname: keycloak.local
+  path: /
+  ingressClassName: nginx
+  tls: false

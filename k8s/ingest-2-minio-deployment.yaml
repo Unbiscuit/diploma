@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ingest-2-minio
+  labels:
+    app: ingest-2-minio
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ingest-2-minio
+  template:
+    metadata:
+      labels:
+        app: ingest-2-minio
+    spec:
+      containers:
+      - name: ingest-2-minio
+        image: uncookie/ingest-2-minio:latest
+        env:
+        - name: KAFKA_BOOTSTRAP
+          value: "kafka.default.svc.cluster.local:9092"
+        - name: MINIO_ENDPOINT
+          value: "minio.default.svc.cluster.local:9000"
+        - name: MINIO_ACCESS_KEY
+          value: "admin"
+        - name: MINIO_SECRET_KEY
+          value: "admin12345"
+        - name: MINIO_BUCKET
+          value: "spd-events"
+        - name: DETECTOR
+          value: "MPD"
+        imagePullPolicy: Always
+

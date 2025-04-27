@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: filter-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: filter-service
+  template:
+    metadata:
+      labels:
+        app: filter-service
+    spec:
+      containers:
+      - name: filter-service
+        image: uncookie/filter-service:latest
+        command: ["python", "-m", "app.filter"]
+        env:
+        - name: KAFKA_BOOTSTRAP
+          value: kafka.default.svc.cluster.local:9092
+        - name: DETECTOR
+          value: MPD
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: filter-service
+spec:
+  selector:
+    app: filter-service
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8000

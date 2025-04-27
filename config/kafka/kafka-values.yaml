@@ -1,0 +1,30 @@
+replicaCount: 3
+
+persistence:
+  enabled: true
+  size: 10Gi
+
+headlessService:
+  enabled: true
+
+listenersOverride:
+  enabled: true
+
+listeners:
+  controller:
+    protocol: PLAINTEXT
+    port: 9093
+  client:
+    protocol: PLAINTEXT
+    port: 9092
+  interbroker:
+    protocol: PLAINTEXT
+    port: 9092
+
+configuration: |-
+  process.roles=broker,controller
+  node.id={{ .StatefulSetOrdinal }}
+  controller.quorum.voters=0@kafka-0.kafka-headless.default.svc.cluster.local:9093,1@kafka-1.kafka-headless.default.svc.cluster.local:9093,2@kafka-2.kafka-headless.default.svc.cluster.local:9093
+  controller.listener.names=CONTROLLER
+  listener.security.protocol.map=CONTROLLER:PLAINTEXT,BROKER:PLAINTEXT
+  inter.broker.listener.name=BROKER
