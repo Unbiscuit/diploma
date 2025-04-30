@@ -2,6 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: filter-service
+  labels:
+    app: filter-service
 spec:
   replicas: 1
   selector:
@@ -13,14 +15,31 @@ spec:
         app: filter-service
     spec:
       containers:
-      - name: filter-service
-        image: uncookie/filter-service:latest
-        command: ["python", "-m", "app.filter"]
-        env:
-        - name: KAFKA_BOOTSTRAP
-          value: kafka.default.svc.cluster.local:9092
-        - name: DETECTOR
-          value: MPD
+        - name: filter-service
+          image: uncookie/filter-service:latest
+          imagePullPolicy: Always
+          env:
+            - name: DETECTOR
+              value: "MPD"
+            - name: KAFKA_BOOTSTRAP
+              value: "kafka.default.svc.cluster.local:9092"
+            - name: PYTHONUNBUFFERED
+              value: "1"
+          command: ["python","-u","-m","app.filter"]
+          ports:
+            - containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 10
 
 ---
 apiVersion: v1
@@ -33,4 +52,4 @@ spec:
   ports:
     - protocol: TCP
       port: 80
-      targetPort: 8000
+      targetPort: 8080

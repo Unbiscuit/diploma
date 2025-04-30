@@ -1,0 +1,17 @@
+replicaCount: 1
+image:
+  repository: uncookie/filter-service
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 8080
+
+livenessProbe:
+  path: /healthz
+  port: 8080
+
+readinessProbe:
+  path: /healthz
+  port: 8080

@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sink-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sink-service
+  template:
+    metadata:
+      labels:
+        app: sink-service
+    spec:
+      containers:
+      - name: sink-service
+        image: uncookie/sink-service:latest
+        imagePullPolicy: Always
+        # 1) Прокидываем env var
+        env:
+        - name: PYTHONUNBUFFERED
+          value: "1"
+        - name: KAFKA_BOOTSTRAP
+          value: kafka.default.svc.cluster.local:9092
+        - name: MINIO_ENDPOINT
+          value: minio.default.svc.cluster.local:9000
+        - name: MINIO_ACCESS_KEY
+          value: admin
+        - name: MINIO_SECRET_KEY
+          value: admin12345
+        - name: MINIO_BUCKET
+          value: spd-events
+        - name: DETECTOR
+          value: "MPD"
+        # 2) Указываем команду старта с -u
+        command: ["python", "-u", "-m", "app.sink_service"]
+        ports:
+        - containerPort: 8080
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 10
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: sink-service
+spec:
+  selector:
+    app: sink-service
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080

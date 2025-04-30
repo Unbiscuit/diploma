@@ -35,5 +35,5 @@ else:
         response = client.get_object(MINIO_BUCKET, obj.object_name)
         content = response.read().decode("utf-8")
         print(f"📥 Content of {obj.object_name}:\n{content}")
-        response.close()
-        break  # проверим только первый
+        response.close()  
+        break

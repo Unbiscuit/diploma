@@ -17,13 +17,24 @@ spec:
         image: uncookie/ingest-service:latest
         ports:
         - containerPort: 50051
+        # <<< Добавляем ENV сюда >>>
+        env:
+        - name: KAFKA_BOOTSTRAP
+          value: "kafka.default.svc.cluster.local:9092"
+        - name: MINIO_ENDPOINT
+          value: "minio.default.svc.cluster.local:9000"
+        - name: MINIO_ACCESS_KEY
+          value: "admin"
+        - name: MINIO_SECRET_KEY
+          value: "admin12345"
+        - name: MINIO_BUCKET
+          value: "spd-events"
         livenessProbe:
           httpGet:
             path: /healthz
             port: 8080
           initialDelaySeconds: 10
           periodSeconds: 5
-
         readinessProbe:
           httpGet:
             path: /healthz
