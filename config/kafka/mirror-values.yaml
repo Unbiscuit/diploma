@@ -1,0 +1,31 @@
+mirror:
+  enabled: true
+
+  # задаём только один инстанс коннектора
+  replicaCount: 1
+
+  # consumer из локального Kafka
+  source:
+    bootstrapServers: kafka.default.svc.cluster.local:9092
+    # plaintext, без TLS/SASL
+    securityProtocol: PLAINTEXT
+
+  # producer в Remote Kafka
+  target:
+    bootstrapServers: kafka-remote.default.svc.cluster.local:9092
+    securityProtocol: PLAINTEXT
+
+  # какие топики реплицировать
+  topicsPattern: "MPD\\.(raw|filtered)"
+
+  # минимальный RF на целевом кластере
+  replicationFactor: 1
+
+## ограничим CPU/memory, чтобы не переполнить узел
+resources:
+  limits:
+    cpu: 500m
+    memory: 512Mi
+  requests:
+    cpu: 200m
+    memory: 256Mi

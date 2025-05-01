@@ -5,3 +5,4 @@ confluent-kafka
 minio
 fastapi
 uvicorn
+h5py>=3.8.0
