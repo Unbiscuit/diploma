@@ -1,0 +1,27 @@
+replicaCount: 1
+
+## Включаем переопределение listeners (требуется Chart-ом)
+overrideListeners: true
+
+## Настройка слушателей как map (а не list!)
+listeners:
+  internal:
+    port: 9092
+    tls: false
+  external:
+    port: 9093
+    tls: false
+
+## Каким протоколом пользуются клиенты для каждого listener
+listenerSecurityProtocolMap:
+  internal: PLAINTEXT
+  external: PLAINTEXT
+
+## Ресурсы подов
+resources:
+  requests:
+    memory: 512Mi
+    cpu: 200m
+  limits:
+    memory: 1Gi
+    cpu: 500m
