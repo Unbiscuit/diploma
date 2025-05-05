@@ -1,0 +1,14 @@
+FROM python:3.13-slim
+
+WORKDIR /app
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Копируем код-сервис
+COPY app ./app
+
+# Копируем директорию с сгенерированными proto-модулями
+COPY app/nica_proto ./nica_proto
+
+CMD ["python", "app/main.py"]

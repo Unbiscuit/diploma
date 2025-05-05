@@ -7,6 +7,11 @@ conf = {'bootstrap.servers': KAFKA_BOOTSTRAP}
 producer = Producer(conf)
 
 def publish_event(detector: str, data: bytes):
-    topic = f"{detector}.raw"
-    producer.produce(topic, value=data)
-    producer.flush()
+    try:
+        topic = f"{detector}.raw"
+        # отправляем — но не ждём бесконечно
+        producer.produce(topic, value=data)
+        # обходим блокировку, даём 0.1сек на отправку
+        producer.flush(timeout=0.1)
+    except Exception as e:
+        print(f"[LOCAL DEV] Kafka unavailable (or timeout), skipping publish: {e}")

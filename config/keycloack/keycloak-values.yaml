@@ -4,10 +4,12 @@ auth:
 
 service:
   type: ClusterIP
+  ports:
+    http: 8080  # явно указываем порт сервиса 8080
 
 ingress:
-  enabled: true
-  hostname: keycloak.local
-  path: /
-  ingressClassName: nginx
-  tls: false
+  enabled: false
+
+extraEnvVars:
+  - name: KEYCLOAK_FRONTEND_URL
+    value: "http://keycloak.local"

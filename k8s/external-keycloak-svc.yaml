@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: keycloak
+  namespace: default
+spec:
+  type: ExternalName
+  externalName: host.minikube.internal   # для minikube
+  ports:
+    - port: 80
+      targetPort: 8080
